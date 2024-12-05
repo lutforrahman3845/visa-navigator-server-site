@@ -74,6 +74,18 @@ async function run() {
       const result = await applyVisaCollection.find(query).toArray();
       res.send(result);
     });
+    // search apply data
+    app.get("/apply/search/:email", async (req, res) => {
+      const { searchParams } = req.query;
+      const email = req.params.email;
+      const query = { email: email };
+
+      if (searchParams && searchParams.trim() !== "") {
+        query.country_name = { $regex: searchParams, $options: "i" };
+      }
+      const result = await applyVisaCollection.find(query).toArray();
+      res.send(result);
+    });
     // post visa
     app.post("/visas", async (req, res) => {
       const visa = req.body;
@@ -116,13 +128,13 @@ async function run() {
       const result = await visaCollection.deleteOne(filter);
       res.send(result);
     });
-    // delete applied visa 
+    // delete applied visa
     app.delete("/apply/:id", async (req, res) => {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
       const result = await applyVisaCollection.deleteOne(filter);
-      res.send(result)
-    })
+      res.send(result);
+    });
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
