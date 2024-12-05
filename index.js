@@ -54,6 +54,13 @@ async function run() {
       const result = await visaCollection.findOne(query);
       res.send(result);
     });
+    // visas bases on uid
+    app.get("/visas/user/:uid", async (req, res) => {
+      const uid = req.params.uid;
+      const query = { uId: uid };
+      const result = await visaCollection.find(query).toArray();
+      res.send(result);
+    });
     // get apply visa
     app.get("/apply", async (req, res) => {
       const cursor = applyVisaCollection.find();
@@ -70,6 +77,29 @@ async function run() {
     app.post("/apply", async (req, res) => {
       const applyVisa = req.body;
       const result = await applyVisaCollection.insertOne(applyVisa);
+      res.send(result);
+    });
+    // update visa
+    app.put("/visas/:id", async (req, res) => {
+      const id = req.params.id;
+      const updatedVisa = req.body;
+
+      const filter = { _id: new ObjectId(id) }; 
+      const update = {
+        $set: {
+          photo: updatedVisa?.photo,
+          name: updatedVisa?.name,
+          visaType: updatedVisa?.visaType,
+          processingTime: updatedVisa?.processingTime,
+          requiredDocuments: updatedVisa?.requiredDocuments,
+          description: updatedVisa?.description,
+          ageRestriction: updatedVisa?.ageRestriction,
+          fee: updatedVisa?.fee,
+          validity: updatedVisa?.validity,
+          applicationMethod: updatedVisa?.applicationMethod,
+        }
+      };
+      const result = await visaCollection.updateOne(filter, update);
       res.send(result);
     });
   } finally {
