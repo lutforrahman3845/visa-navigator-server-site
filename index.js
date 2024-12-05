@@ -102,6 +102,13 @@ async function run() {
       const result = await visaCollection.updateOne(filter, update);
       res.send(result);
     });
+    // delete visa
+    app.delete("/visas/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const result = await visaCollection.deleteOne(filter);
+      res.send(result);
+    })
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
