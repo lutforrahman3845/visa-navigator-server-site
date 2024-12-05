@@ -37,11 +37,20 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     })
+    // filter visa type
+    app.get('/visas/:type', async (req, res) => {
+      const type = req.params.type;
+      const query = {visaType:type}
+      const result = await visaCollection.find(query).toArray()
+      res.send(result);
+    })
+    
     app.post('/visas', async(req , res)=>{
       const visa = req.body;
       const result = await visaCollection.insertOne(visa);
       res.send(result)
     })
+
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
