@@ -67,7 +67,14 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
-
+    // get applied visa by user email
+    app.get("/apply/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email };
+      const result = await applyVisaCollection.find(query).toArray();
+      res.send(result);
+    });
+    // post visa
     app.post("/visas", async (req, res) => {
       const visa = req.body;
       const result = await visaCollection.insertOne(visa);
@@ -84,7 +91,7 @@ async function run() {
       const id = req.params.id;
       const updatedVisa = req.body;
 
-      const filter = { _id: new ObjectId(id) }; 
+      const filter = { _id: new ObjectId(id) };
       const update = {
         $set: {
           photo: updatedVisa?.photo,
@@ -97,7 +104,7 @@ async function run() {
           fee: updatedVisa?.fee,
           validity: updatedVisa?.validity,
           applicationMethod: updatedVisa?.applicationMethod,
-        }
+        },
       };
       const result = await visaCollection.updateOne(filter, update);
       res.send(result);
@@ -108,6 +115,13 @@ async function run() {
       const filter = { _id: new ObjectId(id) };
       const result = await visaCollection.deleteOne(filter);
       res.send(result);
+    });
+    // delete applied visa 
+    app.delete("/apply/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const result = await applyVisaCollection.deleteOne(filter);
+      res.send(result)
     })
   } finally {
     // Ensures that the client will close when you finish/error
