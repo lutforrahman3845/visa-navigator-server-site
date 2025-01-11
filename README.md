@@ -38,7 +38,7 @@
    Open `http://localhost:5000` in your browser.
 
 ## live site link 
-https://assignment-10-server-pied-phi.vercel.app/
+https://visa-navigator-65e95.web.app/
 
 ---
 
